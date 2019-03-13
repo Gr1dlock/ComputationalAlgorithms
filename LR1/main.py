@@ -49,7 +49,3 @@ if __name__ == '__main__':
     if x > table[0][len(table[0]) - 1] or x < table[0][0]:
         print("Произошла экстраполяция")
     print('Результат равен', res)
-    process.swap_table(table)
-    res_table = process.count_diffs(table, 0, 7)
-    res = process.polynomial(res_table, 0)
-    print('Корень уравнения равен', res)
