@@ -51,7 +51,7 @@ def count_points(table, value, n):
         start_point = 0
         end_point = n + 1
     else:
-        start_point = i - 1
+        start_point = i
         end_point = i
         while end_point - start_point != n + 1:
             if start_point > 0:
@@ -92,7 +92,7 @@ def interp(x_table, y_table, z_table, x, nx, y, ny):
     for i in range(x_start, x_end):
         diffs_table = count_diffs(y_table[y_start:y_end],
                                   z_table[i][y_start:y_end], ny)
-        print(z_table[i][y_start:y_end])
+        #print(z_table[i][y_start:y_end])
         tmp_res = polynomial(y_table[y_start:y_end],
                              z_table[i][y_start:y_end],
                              diffs_table, y)

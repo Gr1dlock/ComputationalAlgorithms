@@ -37,5 +37,7 @@ if __name__ == '__main__':
     process.print_table(X, Y, table)
     x, nx = process.input_point('x', 'nx', len_x)
     y, ny = process.input_point('y', 'ny', len_y)
+    if x < X[0] or x > X[len_x - 1] or y < Y[0]  or y > Y[len_y - 1]:
+        print('Произошла экстраполяция')
     res = process.interp(X, Y, table, x, nx, y, ny)
     print('Результат равен', res)
