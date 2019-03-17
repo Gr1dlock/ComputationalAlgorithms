@@ -45,7 +45,7 @@ def count_diffs(table, x, n):
         high = i
         res_table = [list(), list()]
         while len(res_table[0]) != n + 1:
-            if low > 0:
+            if low >= 0:
                 res_table[0].insert(0, table[0][low])
                 res_table[1].insert(0, table[1][low])
                 low -= 1
