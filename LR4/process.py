@@ -1,6 +1,7 @@
 import re
 import matplotlib.pyplot as plt
 import numpy as np
+from math import *
 
 def check_float(text):
     match = re.fullmatch(r'[-+]?(?:\d+(?:\.\d*)?|\.\d+)', text)
@@ -18,7 +19,7 @@ def func(x, k):
 
 def autofill(filename):
     file = open(filename, 'w')
-    for i in range(-3, 3, 1):
+    for i in range(-3, 4, 1):
         file.write(str(i) + " " + str(func(i, 3)) + " 1" + "\n")
     file.close()
 
@@ -44,15 +45,27 @@ def get_matrix(table, n):
 
 
 def gauss(matrix):
-    print(matrix)
     length = len(matrix)
+    for i in matrix:
+        print(i)
+    print()
     for k in range(length):
+        max_elem = 0.0
+        max_index = 0
+        for i in range(k, length):
+            if fabs(matrix[i][k]) >= max_elem:
+                max_elem = fabs(matrix[i][k])
+                max_index = i
+        if max_index != k:
+            for i in range(length + 1):
+                matrix[k][i], matrix[max_index][i] = matrix[max_index][i], matrix[k][i]
         for i in range(k + 1, length):
             coef = -(matrix[i][k] / matrix[k][k])
             for j in range(k, length + 1):
                 matrix[i][j] += coef * matrix[k][j]
     a = [0 for i in range(length)]
-    print(matrix)
+    for i in matrix:
+        print(i)
     for i in range(length - 1, -1, -1):
         for j in range(length - 1, i, -1):
             matrix[i][length] -= a[j] * matrix[i][j]
@@ -65,7 +78,6 @@ def print_result(table, a, n):
     if len(table[0]) > 1:
         dx = (table[0][1] - table[0][0])
 
-    # построение аппроксимирующей функции
     x = np.linspace(table[0][0] - dx, table[0][-1] + dx, 100)
     y = []
     for i in x:
