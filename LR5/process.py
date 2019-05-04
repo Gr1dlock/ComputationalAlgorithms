@@ -23,16 +23,16 @@ def check_int(text):
 def get_data():
     while True:
         t0 = input('\nВведите To:')
-        if check_int(t0):
-            t0 = int(t0)
+        if check_float(t0):
+            t0 = float(t0)
             break
         else:
             print('\nНекорректный ввод')
 
     while True:
         tw = input('\nВведите Tw:')
-        if check_int(tw):
-            tw = int(tw)
+        if check_float(tw):
+            tw = float(tw)
             break
         else:
             print('\nНекорректный ввод')
@@ -47,16 +47,16 @@ def get_data():
 
     while True:
         p_start = input('\nВведите Pнач:')
-        if check_int(p_start):
-            p_start = int(p_start)
+        if check_float(p_start):
+            p_start = float(p_start)
             break
         else:
             print('\nНекорректный ввод')
 
     while True:
         t_start = input('\nВведите Tнач:')
-        if check_int(t_start):
-            t_start = int(t_start)
+        if check_float(t_start):
+            t_start = float(t_start)
             break
         else:
             print('\nНекорректный ввод')
@@ -74,13 +74,53 @@ def count_nt(p, t):
 def fill_nt(p, h, data):
     z = 0
     nt_array = []
-    for i in range(40):
+    for i in range(41):
         t = count_t(data, z)
         nt_array.append(count_nt(p, t))
         z += h
     return nt_array
 
 
-def integral()
+def integral(p, data):
+    h = 1 / 40
+    nt_array = fill_nt(p, h, data)
+    result = 0
+    z = h
+    i = 1
+    while i < 40:
+        result += 4.0 * nt_array[i] * z
+        i += 1
+        z += h
+        if i < 40:
+            result += 2.0 * nt_array[i] * z
+        z += h
+        i += 1
+    result += nt_array[40]
+    result *= (h / 3)
+    return result
 
 
+def func(coef, data, p):
+    return coef - 2.0 * integral(p, data)
+
+
+def find_p(data):
+    coef = 7242 * (data.p_start / data.t_start)
+    left = 3
+    right = 25
+    middle = (left + right) / 2
+    f_left = func(coef, data, left)
+    f_right = func(coef, data, right)
+    f_middle = func(coef, data, middle)
+    while abs(f_middle) > 10e-4:
+        if f_left * f_middle < 0:
+            right = middle
+        elif f_right * f_middle < 0:
+            left = middle
+        else:
+            break
+        middle = (left + right) / 2
+        f_left = func(coef, data, left)
+        f_right = func(coef, data, right)
+        f_middle = func(coef, data, middle)
+    return middle
