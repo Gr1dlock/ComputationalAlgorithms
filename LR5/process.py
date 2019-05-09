@@ -1,7 +1,7 @@
 import interpolation
 from math import exp, log
 
-POINTS = 40
+POINTS = 3
 Q_TABLE = [[2000, 4000, 6000, 8000, 10000, 12000, 14000, 16000, 18000, 20000,
             22000, 24000, 26000],
            [1, 1, 1, 1.0001, 1.0025, 1.0198, 1.0895, 1.2827, 1.6973, 2.4616,
@@ -201,6 +201,8 @@ def count_nt(T, p):
         if check_finish(cur_del, res):
             flag = False
     nt = res.count_nt()
+    print("ne = ", exp(res.v), ", n2 = ", exp(res.x[1]))
+
     return nt
 
 
