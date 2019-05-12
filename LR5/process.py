@@ -1,7 +1,7 @@
 import interpolation
 from math import exp, log
 
-POINTS = 3
+POINTS = 40
 Q_TABLE = [[2000, 4000, 6000, 8000, 10000, 12000, 14000, 16000, 18000, 20000,
             22000, 24000, 26000],
            [1, 1, 1, 1.0001, 1.0025, 1.0198, 1.0895, 1.2827, 1.6973, 2.4616,
@@ -20,7 +20,7 @@ V_INIT = -1
 X_INIT = [2, -1, -10, -25, -35]
 ALPHA_INIT = 0
 GAMMA_INIT = 0
-COEF_ALPHA = 0.285 * 10e-11
+COEF_ALPHA = 0.285e-11
 COEF_K = 7242
 POLYNOMIAL_DEGREE = 2
 EPS = 10e-4
@@ -60,7 +60,7 @@ def func_gamma(gamma, res, T):
     for i in range(2, 6):
         cur_sum += ((exp(res.x[i - 1]) * Z_TABLE[i - 1] ** 2) /
                     (1 + Z_TABLE[i - 1] ** 2 * gamma * 0.5))
-    coef = 5.87 * 10e10 / T**3
+    coef = 5.87e10 / T**3
     return gamma ** 2 - coef * cur_sum
 
 
@@ -69,18 +69,13 @@ def count_gamma(res, T):
     right = 3
     middle = (left + right) / 2
     f_left = func_gamma(left, res, T)
-    f_right = func_gamma(right, res, T)
     f_middle = func_gamma(middle, res, T)
-    while abs(f_middle) > EPS:
+    while abs((right - left) / middle) > EPS:
         if f_left * f_middle < 0:
             right = middle
-        elif f_right * f_middle < 0:
-            left = middle
         else:
-            break
+            left = middle
         middle = (left + right) / 2
-        f_left = func_gamma(left, res, T)
-        f_right = func_gamma(right, res, T)
         f_middle = func_gamma(middle, res, T)
     return middle
 
@@ -133,7 +128,7 @@ def count_right(x, v, K, alpha, coef):
 
 
 def count_del_E(T, gamma):
-    coef = 8.61 * 10e-5 * T
+    coef = 8.61e-5 * T
     gamma *= 0.5
     res_E = []
     for i in range(4):
@@ -201,7 +196,10 @@ def count_nt(T, p):
         if check_finish(cur_del, res):
             flag = False
     nt = res.count_nt()
-    print("ne = ", exp(res.v), ", n2 = ", exp(res.x[1]))
+    print("ne = ", exp(res.v))
+    for i in range(5):
+        print("n", i + 1, " = ", exp(res.x[i]), sep="")
+    print("gamma =", gamma)
 
     return nt
 
@@ -223,7 +221,7 @@ def fill_nt(p, h, data):
 def integral(p, data):
     h = 1 / POINTS
     nt_array = fill_nt(p, h, data)
-    result = 0
+    result = nt_array[0]
     z = h
     i = 1
     while i < POINTS:
@@ -245,22 +243,17 @@ def func(coef, data, p):
 
 def find_p(data):
     coef = 7242 * (P_INIT / T_INIT)
-    left = -10
+    left = 4
     right = 25
     middle = (left + right) / 2
     f_left = func(coef, data, left)
-    f_right = func(coef, data, right)
     f_middle = func(coef, data, middle)
-    while abs(f_middle) > EPS:
+    while abs((right - left) / middle) > EPS:
         if f_left * f_middle < 0:
             right = middle
-        elif f_right * f_middle < 0:
-            left = middle
         else:
-            print("No root")
-            break
+            left = middle
         middle = (left + right) / 2
-        f_left = func(coef, data, left)
-        f_right = func(coef, data, right)
         f_middle = func(coef, data, middle)
+
     return middle
