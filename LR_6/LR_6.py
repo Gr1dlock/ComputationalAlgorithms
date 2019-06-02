@@ -12,8 +12,8 @@ def f_der(x, a0=1, a1=2, a2=3):
 # ksi'|x = 1 / (x * x)
 # eta'|ksi = (a + b*ksi)' = b = a1/a0
 
-def ksi(x, a0=1, a1=2):
-    return (a1 / a0) * x
+def eta_ksi_der(a0=1, a1=2):
+    return a1 / a0
 
 
 def eta_y_der(y):
@@ -96,16 +96,11 @@ def runge_left_side(y, h):
 def align_variable(x, y):
     y_len = len(y)
     result = [0] * y_len
-
-    tmp = [ksi(x[i]) for i in range(1, len(x))]
-    tmp = right_side_form(tmp, h)
-    eta_ksi_der = tmp[0]
-
     for i in range(0, y_len):
         if x[i] == 0:
             result[i] = None
         else:
-            result[i] = (ksi_x_der(x[i]) / eta_y_der(y[i])) * eta_ksi_der
+            result[i] = (ksi_x_der(x[i]) / eta_y_der(y[i])) * eta_ksi_der()
     return result
 
 
